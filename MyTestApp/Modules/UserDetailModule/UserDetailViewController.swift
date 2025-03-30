@@ -10,6 +10,8 @@ import UIKit
 class UserDetailViewController: UIViewController {
     private let user: User
 
+    // MARK: - Initializers
+
     init(user: User) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
@@ -19,13 +21,17 @@ class UserDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - View Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        setupUI() // Configure UI elements
     }
 
+    // MARK: - UI Setup
+
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.systemBackground // Supports Dark Mode
         title = user.name
 
         let emailLabel = createLabel(text: "Email: \(user.email)")
@@ -38,8 +44,6 @@ class UserDetailViewController: UIViewController {
         stackView.distribution = .fillEqually
         stackView.axis = .vertical
         stackView.spacing = 10
-        
-        
 
         view.addSubview(stackView)
 
@@ -49,13 +53,21 @@ class UserDetailViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
+
+        // Accessibility enhancement: Announce screen change
+        UIAccessibility.post(notification: .screenChanged, argument: "\(user.name)'s details displayed")
     }
+
+    // MARK: - Helper Methods
 
     private func createLabel(text: String) -> UILabel {
         let label = UILabel()
         label.text = text
         label.textAlignment = .center
         label.numberOfLines = 0
+        label.textColor = UIColor.label // Supports Dark Mode
+        label.isAccessibilityElement = true // Enables VoiceOver support
+        label.accessibilityLabel = text // Accessibility support
         return label
     }
 

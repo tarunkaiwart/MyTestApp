@@ -11,11 +11,28 @@ import CoreData
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    private let jailbreakDetection: JailbreakDetectionManagerProtocol
+        
+    // Custom initializer
+      init(jailbreakDetection: JailbreakDetectionManagerProtocol = JailbreakDetectionManager.shared) {
+          self.jailbreakDetection = jailbreakDetection
+          super.init()
+      }
 
+      // Required initializer for conformance to UIApplicationDelegate
+      required override init() {
+          self.jailbreakDetection = JailbreakDetectionManager.shared
+          super.init()
+      }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        #if !targetEnvironment(simulator)
+        if jailbreakDetection.isDeviceJailbroken() {
+            exit(0) //// Terminate the app if jailbreak is detected
+        }#endif
         return true
+        
     }
 
     // MARK: UISceneSession Lifecycle
