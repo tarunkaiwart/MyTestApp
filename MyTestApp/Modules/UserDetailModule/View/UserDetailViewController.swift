@@ -8,12 +8,13 @@
 import UIKit
 
 class UserDetailViewController: UIViewController {
-    private let user: User
+    
+    private let userDetailViewModel: UserDetailViewModel
 
     // MARK: - Initializers
 
-    init(user: User) {
-        self.user = user
+    init(userDetailViewModel: UserDetailViewModel) {
+        self.userDetailViewModel = userDetailViewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -32,11 +33,11 @@ class UserDetailViewController: UIViewController {
 
     private func setupUI() {
         view.backgroundColor = UIColor.systemBackground // Supports Dark Mode
-        title = user.name
+        title = userDetailViewModel.fullName
 
-        let emailLabel = createLabel(text: "Email: \(user.email)")
-        let phoneLabel = createLabel(text: "Phone: \(user.phone ?? "N/A")")
-        let addressLabel = createLabel(text: "Address: \(formatAddress(user.address))")
+        let emailLabel = createLabel(text: "Email: \(userDetailViewModel.email)")
+        let phoneLabel = createLabel(text: "Phone: \(userDetailViewModel.phone ?? "N/A")")
+        let addressLabel = createLabel(text: "Address: \(userDetailViewModel.address))")
 
         let stackView = UIStackView(arrangedSubviews: [emailLabel, phoneLabel, addressLabel])
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -55,7 +56,7 @@ class UserDetailViewController: UIViewController {
         ])
 
         // Accessibility enhancement: Announce screen change
-        UIAccessibility.post(notification: .screenChanged, argument: "\(user.name)'s details displayed")
+        UIAccessibility.post(notification: .screenChanged, argument: "\(userDetailViewModel.fullName)'s details displayed")
     }
 
     // MARK: - Helper Methods

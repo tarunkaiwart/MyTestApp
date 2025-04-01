@@ -15,13 +15,13 @@ class UserListViewController: UIViewController, UITableViewDelegate, UITableView
        private let refreshControl = UIRefreshControl()
        
        // ViewModel instance for managing user data and business logic
-       private var viewModel: UserViewModel
+       private var userViewModel: UserViewModel
 
        // MARK: - Initializers
 
        // Dependency Injection for ViewModel, allowing default initialization if not provided
        init(viewModel: UserViewModel = UserViewModel()) {
-           self.viewModel = viewModel
+           self.userViewModel = viewModel
            super.init(nibName: nil, bundle: nil)
        }
 
@@ -36,7 +36,7 @@ class UserListViewController: UIViewController, UITableViewDelegate, UITableView
            super.viewDidLoad()
            setupUI()        // Configure UI elements
            setupBindings()  // Bind ViewModel callbacks
-           viewModel.fetchUsers() // Fetch initial user data
+           userViewModel.fetchUsers() // Fetch initial user data
        }
 
        // MARK: - UI Setup
@@ -72,14 +72,14 @@ class UserListViewController: UIViewController, UITableViewDelegate, UITableView
 
        /// Binds ViewModel's data update and error handling callbacks
        private func setupBindings() {
-           viewModel.onDataUpdate = { [weak self] in
+           userViewModel.onDataUpdate = { [weak self] in
                DispatchQueue.main.async {
                    self?.tableView.reloadData()   // Reload tableView when data updates
                    self?.refreshControl.endRefreshing() // Stop refreshing animation
                    UIAccessibility.post(notification: .announcement, argument: "User list updated") // Accessibility: VoiceOver announces update
                }
            }
-           viewModel.onError = { [weak self] message in
+           userViewModel.onError = { [weak self] message in
                DispatchQueue.main.async {
                    self?.showErrorAlert(message) // Display an alert in case of an error
                }
@@ -90,7 +90,7 @@ class UserListViewController: UIViewController, UITableViewDelegate, UITableView
 
        /// Triggers data refresh when user pulls down on the table view
        @objc private func refreshData() {
-           viewModel.fetchUsers()
+           userViewModel.fetchUsers()
        }
        
        #if DEBUG
@@ -112,13 +112,13 @@ class UserListViewController: UIViewController, UITableViewDelegate, UITableView
 
        /// Returns the number of rows in the tableView, equal to the number of users
        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-           return viewModel.users.count
+           return userViewModel.users.count
        }
 
        /// Configures and returns a cell for each row in the tableView
        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-           let user = viewModel.users[indexPath.row]
+           let user = userViewModel.users[indexPath.row]
            cell.textLabel?.text = user.name // Display user's name in the cell
            cell.textLabel?.textColor = UIColor.label // Supports Dark Mode by adapting text color
            cell.isAccessibilityElement = true // Enables VoiceOver for each cell
@@ -130,8 +130,10 @@ class UserListViewController: UIViewController, UITableViewDelegate, UITableView
 
        /// Handles row selection and navigates to the user detail screen
        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-           let selectedUser = viewModel.users[indexPath.row]
-           let detailVC = UserDetailViewController(user: selectedUser)
+           let selectedUser = userViewModel.users[indexPath.row]
+           let userDetail = UserDetail(user: selectedUser)
+           let userDetailViewModel = UserDetailViewModel(userDetail: userDetail)
+           let detailVC = UserDetailViewController(userDetailViewModel: userDetailViewModel)
            navigationController?.pushViewController(detailVC, animated: true)
        }
 }
