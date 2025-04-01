@@ -53,11 +53,6 @@
 			path = MyTestAppTests;
 			sourceTree = "<group>";
 		};
-		026CF2BD2D92BAAD003D1AD6 /* MyTestAppUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MyTestAppUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,7 +85,6 @@
 			children = (
 				026CF2992D92BAAA003D1AD6 /* MyTestApp */,
 				026CF2B32D92BAAD003D1AD6 /* MyTestAppTests */,
-				026CF2BD2D92BAAD003D1AD6 /* MyTestAppUITests */,
 				026CF2982D92BAAA003D1AD6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -165,9 +159,6 @@
 			);
 			dependencies = (
 				026CF2BC2D92BAAD003D1AD6 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				026CF2BD2D92BAAD003D1AD6 /* MyTestAppUITests */,
 			);
 			name = MyTestAppUITests;
 			packageProductDependencies = (
