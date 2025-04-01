@@ -10,8 +10,6 @@ import XCTest
 import XCTest
 @testable import MyTestApp
 
-import XCTest
-@testable import MyTestApp
 
 class UserListViewControllerTests: XCTestCase {
 
@@ -63,29 +61,34 @@ class UserListViewControllerTests: XCTestCase {
     // Test number of rows in tableView
     func testNumberOfRowsInTableView() {
         // Simulate users being loaded
-        //let username: String
-//        let email: String
-//        let address: Address?
-//        let phone: String?
-//        let website: String?
-//        let company: Company?
-        mockViewModel.users = [User(id: 1, name: "Tarun Kumar", username: "tarunkaiwart211", email: "tarunkaiwart211@yahoo.com", address: nil, phone: nil, website: nil, company: nil)]
-        viewController.reloadTableView()
+        let mockUser = User(id: 1, name: "Tarun Kumar", username: "tarunkaiwart211", email: "tarunkaiwart211@yahoo.com")
+        print(mockUser.name)  // Output: Tarun Kumar
+
+        // Custom address
+        let customAddress = User.Address(street: "456 Oak St", suite: "Apt 12", city: "San Francisco", zipcode: "94105", geo: User.Geo(lat: "37.7749", lng: "-122.4194"))
+        let mockUserWithCustomAddress = User(id: 2, name: "John Doe", username: "john_doe", email: "john.doe@example.com", address: customAddress)
+        let mockCompany = User.Company(name: "Tech X")
+        print(mockUserWithCustomAddress.address?.street ?? "")  // Output: 456 Oak St
         
+        mockViewModel.users = [
+            User(id: 1, name: "Tarun Kumar", username: "tarunkaiwart211", email: "tarunkaiwart211@yahoo.com", address: customAddress, phone: "123-456-7890", website: "www.example.com", company: mockCompany)
+        ]
+        
+        viewController.reloadTableView()
+
         guard let tableView = viewController.getTableView() else {
             XCTFail("TableView should be accessible via helper method")
             return
         }
         
-        XCTAssertEqual(tableView.numberOfRows(inSection: 0), 2, "TableView row count should match number of users")
+        // Make sure the number of rows in the table view matches the number of users
+        XCTAssertEqual(tableView.numberOfRows(inSection: 0), 1, "TableView row count should match number of users")
     }
 
     // Test cellForRow method
     func testCellForRowAtIndexPath() {
-        // Simulate users being loaded
-        mockViewModel.users = [User(id: 1, name: "Tarun Kumar", username: "tarunkaiwart211", email: "tarunkaiwart211@yahoo.com", address: nil, phone: nil, website: nil, company: nil),
-                               
-        ]
+        // Simulate users being loaded with correct data
+        mockViewModel.users = [User(id: 1, name: "Tarun Kumar", username: "tarunkaiwart211", email: "tarunkaiwart211@yahoo.com", address: nil, phone: nil, website: nil, company: nil)]
         viewController.reloadTableView()
         
         guard let tableView = viewController.getTableView() else {
@@ -95,7 +98,7 @@ class UserListViewControllerTests: XCTestCase {
         
         let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
         
-        XCTAssertEqual(cell?.textLabel?.text, "John Doe", "Cell should display correct user name")
+        XCTAssertEqual(cell?.textLabel?.text, "Tarun Kumar", "Cell should display correct user name")
     }
     
     // Test navigation when a row is selected
@@ -110,7 +113,16 @@ class UserListViewControllerTests: XCTestCase {
         RunLoop.current.run(until: Date()) // Allow UI updates
 
         // Simulate users being loaded
-        mockViewModel.users = [User(id: 1, name: "Tarun Kumar", username: "tarunkaiwart211", email: "tarunkaiwart211@yahoo.com", address: nil, phone: nil, website: nil, company: nil)]
+        let mockUser = User(id: 1, name: "Tarun Kumar", username: "tarunkaiwart211", email: "tarunkaiwart211@yahoo.com")
+        print(mockUser.name)  // Output: Tarun Kumar
+
+        // Custom address
+        let customAddress = User.Address(street: "456 Oak St", suite: "Apt 12", city: "San Francisco", zipcode: "94105", geo: User.Geo(lat: "37.7749", lng: "-122.4194"))
+        let mockUserWithCustomAddress = User(id: 2, name: "John Doe", username: "john_doe", email: "john.doe@example.com", address: customAddress)
+        let mockCompany = User.Company(name: "Tech X")
+        print(mockUserWithCustomAddress.address?.street ?? "")  // Output: 456 Oak St
+        
+        mockViewModel.users = [User(id: 1, name: "Tarun Kumar", username: "tarunkaiwart211", email: "tarunkaiwart211@yahoo.com", address: customAddress, phone: "123983123", website: "www.x.com", company: mockCompany)]
         viewController.reloadTableView()
         
         guard let tableView = viewController.getTableView() else {
@@ -139,10 +151,10 @@ class MockUserViewModel: UserViewModel {
     var fetchUsersCalled = false
     private var _mockUsers: [User] = []
 
-        override var users: [User] {
-            get { return _mockUsers }
-            set { _mockUsers = newValue }
-        }
+    override var users: [User] {
+        get { return _mockUsers }
+        set { _mockUsers = newValue }
+    }
 
     override func fetchUsers() {
         fetchUsersCalled = true
@@ -175,3 +187,4 @@ extension UserListViewController {
         getTableView()?.reloadData()
     }
 }
+

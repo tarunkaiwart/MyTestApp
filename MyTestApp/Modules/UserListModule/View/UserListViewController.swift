@@ -9,7 +9,7 @@ import UIKit
 class UserListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // TableView to display the list of users
-       private let tableView = UITableView()
+       private var tableView = UITableView()
        
        // Refresh control to enable pull-to-refresh functionality
        private let refreshControl = UIRefreshControl()
@@ -34,6 +34,7 @@ class UserListViewController: UIViewController, UITableViewDelegate, UITableView
 
        override func viewDidLoad() {
            super.viewDidLoad()
+           
            setupUI()        // Configure UI elements
            setupBindings()  // Bind ViewModel callbacks
            userViewModel.fetchUsers() // Fetch initial user data
@@ -44,6 +45,7 @@ class UserListViewController: UIViewController, UITableViewDelegate, UITableView
        /// Configures the UI components and layout with Dark Mode and Accessibility support
        private func setupUI() {
            view.backgroundColor = UIColor.systemBackground // Supports Dark Mode
+           tableView = UITableView(frame: self.view.bounds, style: .plain)
            tableView.translatesAutoresizingMaskIntoConstraints = false
            view.addSubview(tableView)
 
