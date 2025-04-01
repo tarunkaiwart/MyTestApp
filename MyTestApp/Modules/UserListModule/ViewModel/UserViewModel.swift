@@ -41,15 +41,15 @@ class UserViewModel {
             }
             
             // Core Data loading is commented out. Uncomment if Core Data should be checked before making a network request.
-//            if !coreDataManager.fetchUsers().isEmpty {
-//                let coreDataStoredUser = coreDataManager.fetchUsers()
-//                if !coreDataStoredUser.isEmpty {
-//                    self.users = coreDataStoredUser
-//                }
-//                onDataUpdate?()
-//                print("Loaded users from Core Data.")
-//                return
-//            }
+            if !coreDataManager.fetchUsers().isEmpty {
+                let coreDataStoredUser = coreDataManager.fetchUsers()
+                if !coreDataStoredUser.isEmpty {
+                    self.users = coreDataStoredUser
+                }
+                onDataUpdate?()
+                print("Loaded users from Core Data.")
+                return
+            }
 
             do {
                 // Step 2: Fetch from API if no cached data is found
