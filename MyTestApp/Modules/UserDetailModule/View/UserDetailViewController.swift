@@ -36,7 +36,7 @@ class UserDetailViewController: UIViewController {
         title = userDetailViewModel.fullName
 
         let emailLabel = createLabel(text: "Email: \(userDetailViewModel.email)")
-        let phoneLabel = createLabel(text: "Phone: \(userDetailViewModel.phone ?? "N/A")")
+        let phoneLabel = createLabel(text: "Phone: \(userDetailViewModel.phone)")
         let addressLabel = createLabel(text: "Address: \(userDetailViewModel.address))")
 
         let stackView = UIStackView(arrangedSubviews: [emailLabel, phoneLabel, addressLabel])

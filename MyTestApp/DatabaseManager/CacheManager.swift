@@ -29,8 +29,10 @@ class CacheManager: CacheManagerProtocol {
         do {
             // Encode the data to JSON format.
             let encodedData = try JSONEncoder().encode(data)
+            let cacheKey = String(describing: T.self)
             // Store encoded data in cache with a key based on the data type.
-            cache.setObject(encodedData as NSData, forKey: String(describing: T.self) as NSString)
+            cache.setObject(encodedData as NSData, forKey: cacheKey as NSString)
+            print("Saved data to Cache Memory with key: \(cacheKey), Data: \(encodedData)")
         } catch {
             print("Failed to cache data: \(error.localizedDescription)")
         }
@@ -40,11 +42,25 @@ class CacheManager: CacheManagerProtocol {
     /// - Parameter type: The expected type of the cached object.
     /// - Returns: The decoded object if available; otherwise, nil.
     func getData<T: Decodable>(ofType type: T.Type) -> T? {
-        // Retrieve cached data using the type's name as the key.
-        if let cachedData = cache.object(forKey: String(describing: T.self) as NSString) as Data? {
-            // Attempt to decode the retrieved data.
-            return try? JSONDecoder().decode(T.self, from: cachedData)
+        // Use the same key when retrieving the data.
+        let cacheKey = String(describing: T.self)
+        
+        // Retrieve cached data using the cache key.
+        if let cachedData = cache.object(forKey: cacheKey as NSString) as? NSData {
+            let data = cachedData as Data
+            print("Cache contains data for key: \(cacheKey), Data length: \(data.count) bytes")
+            do {
+                let decodedData = try JSONDecoder().decode(T.self, from: data)
+                print("Successfully decoded data: \(decodedData)")
+                return decodedData
+            } catch {
+                print("Failed to decode cached data: \(error.localizedDescription)")
+            }
+        } else {
+            print("No data found in cache for key: \(cacheKey)")
         }
         return nil
     }
+
+
 }
